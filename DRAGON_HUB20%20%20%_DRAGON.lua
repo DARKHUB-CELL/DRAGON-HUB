@@ -1,23 +1,24 @@
 repeat task.wait() until game:IsLoaded()
 
 local player = game.Players.LocalPlayer
+
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
 local Title = Instance.new("TextLabel")
 local Status = Instance.new("TextLabel")
 local Info = Instance.new("TextLabel")
 local KeyBox = Instance.new("TextBox")
+local GetKey = Instance.new("TextButton")
 local Confirm = Instance.new("TextButton")
 local Logo = Instance.new("ImageLabel")
-local TimeLabel = Instance.new("TextLabel")
 
 local Corner = Instance.new("UICorner")
 local Stroke = Instance.new("UIStroke")
 
-local PremiumKey = "DRAGONTEST"
-local PremiumTime = 120
-
-local expireTime = nil
+-- KEYS
+local NormalKey = "DRAGONFREE"
+local PremiumKey = "DRAGONVIP"
+local AdminKey = "DRAGONADMIN"
 
 ScreenGui.Parent = player:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
@@ -51,7 +52,7 @@ Status.TextScaled = true
 Info.Parent = Frame
 Info.Position = UDim2.new(0.1,0,0.25,0)
 Info.Size = UDim2.new(0.8,0,0,30)
-Info.Text = "PLEASE GET KEY IN YOUTUBE"
+Info.Text = "PLEASE GET KEY"
 Info.BackgroundTransparency = 1
 Info.TextColor3 = Color3.fromRGB(255,255,255)
 Info.TextScaled = true
@@ -64,19 +65,21 @@ KeyBox.TextScaled = true
 KeyBox.BackgroundColor3 = Color3.fromRGB(50,50,50)
 KeyBox.TextColor3 = Color3.fromRGB(255,255,255)
 
-TimeLabel.Parent = Frame
-TimeLabel.Position = UDim2.new(0.35,0,0.45,0)
-TimeLabel.Size = UDim2.new(0.3,0,0,30)
-TimeLabel.Text = "00:00:00"
-TimeLabel.TextScaled = true
-TimeLabel.BackgroundTransparency = 1
-TimeLabel.TextColor3 = Color3.fromRGB(0,255,0)
+GetKey.Parent = Frame
+GetKey.Position = UDim2.new(0.1,0,0.5,0)
+GetKey.Size = UDim2.new(0.35,0,0,40)
+GetKey.Text = "GET KEY"
+GetKey.TextScaled = true
+GetKey.BackgroundColor3 = Color3.fromRGB(70,70,70)
+GetKey.TextColor3 = Color3.fromRGB(255,255,255)
 
 Confirm.Parent = Frame
-Confirm.Position = UDim2.new(0.3,0,0.55,0)
-Confirm.Size = UDim2.new(0.4,0,0,40)
+Confirm.Position = UDim2.new(0.55,0,0.5,0)
+Confirm.Size = UDim2.new(0.35,0,0,40)
 Confirm.Text = "CONFIRM"
 Confirm.TextScaled = true
+Confirm.BackgroundColor3 = Color3.fromRGB(70,70,70)
+Confirm.TextColor3 = Color3.fromRGB(255,255,255)
 
 Logo.Parent = Frame
 Logo.Size = UDim2.new(0,120,0,120)
@@ -85,77 +88,54 @@ Logo.BackgroundTransparency = 1
 Logo.Image = "rbxassetid://135408263740320"
 Logo.ScaleType = Enum.ScaleType.Fit
 
--- RGB border
+-- RGB BORDER
 task.spawn(function()
+
     local hue = 0
+
     while true do
-        hue += 0.01
-        if hue > 1 then hue = 0 end
-        Stroke.Color = Color3.fromHSV(hue,1,1)
-        task.wait(0.03)
-    end
-end)
 
--- format time
-local function formatTime(sec)
-    local h = math.floor(sec/3600)
-    local m = math.floor((sec%3600)/60)
-    local s = sec%60
-    return string.format("%02d:%02d:%02d",h,m,s)
-end
+        hue = hue + 0.01
 
--- preview
-KeyBox:GetPropertyChangedSignal("Text"):Connect(function()
-    if KeyBox.Text == PremiumKey then
-        TimeLabel.Text = formatTime(PremiumTime)
-    else
-        TimeLabel.Text = "00:00:00"
-    end
-end)
-
--- timer
-local function startTimer()
-
-    task.spawn(function()
-
-        while true do
-
-            local timeLeft = expireTime - os.time()
-
-            if timeLeft <= 0 then
-
-                TimeLabel.Text = "00:00:00"
-                Status.Text = "TIMER END PLEASE OUT"
-
-                break
-
-            end
-
-            TimeLabel.Text = formatTime(timeLeft)
-
-            task.wait(1)
-
+        if hue > 1 then
+            hue = 0
         end
 
-    end)
+        Stroke.Color = Color3.fromHSV(hue,1,1)
 
-end
+        task.wait(0.03)
 
--- confirm
+    end
+
+end)
+
+-- COPY KEY
+GetKey.MouseButton1Click:Connect(function()
+
+    setclipboard("DRAGONFREE")
+
+    Status.Text = "Key Copied"
+
+end)
+
+-- CONFIRM
 Confirm.MouseButton1Click:Connect(function()
 
-    if KeyBox.Text == PremiumKey then
+    local key = KeyBox.Text
 
+    if key == NormalKey or key == PremiumKey or key == AdminKey then
+        
         Status.Text = "KEY ACCEPTED"
 
-        expireTime = os.time() + PremiumTime
+        task.wait(0.5)
 
-        startTimer()
+        ScreenGui:Destroy()
+
+        print("Dragon Hub Loaded")
 
     else
-
+        
         Status.Text = "Wrong Key"
-        TimeLabel.Text = "00:00:00"
 
     end
 
