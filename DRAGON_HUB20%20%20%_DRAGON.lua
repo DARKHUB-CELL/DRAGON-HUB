@@ -1,3 +1,6 @@
+repeat task.wait() until game:IsLoaded()
+
+local player = game.Players.LocalPlayer
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
 local Title = Instance.new("TextLabel")
@@ -16,7 +19,7 @@ local PremiumTime = 120
 
 local expireTime = nil
 
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
 
 Frame.Parent = ScreenGui
@@ -82,88 +85,63 @@ Logo.BackgroundTransparency = 1
 Logo.Image = "rbxassetid://135408263740320"
 Logo.ScaleType = Enum.ScaleType.Fit
 
--- RGB BORDER
+-- RGB border
 task.spawn(function()
-
     local hue = 0
-
     while true do
-
-        hue = hue + 0.01
-
-        if hue > 1 then
-            hue = 0
-        end
-
+        hue += 0.01
+        if hue > 1 then hue = 0 end
         Stroke.Color = Color3.fromHSV(hue,1,1)
-
         task.wait(0.03)
-
     end
-
 end)
 
--- FORMAT TIME
+-- format time
 local function formatTime(sec)
-
-    local h = math.floor(sec / 3600)
-    local m = math.floor((sec % 3600) / 60)
-    local s = sec % 60
-
+    local h = math.floor(sec/3600)
+    local m = math.floor((sec%3600)/60)
+    local s = sec%60
     return string.format("%02d:%02d:%02d",h,m,s)
-
 end
 
--- SHOW PREVIEW TIME
+-- preview
 KeyBox:GetPropertyChangedSignal("Text"):Connect(function()
-
     if KeyBox.Text == PremiumKey then
         TimeLabel.Text = formatTime(PremiumTime)
     else
         TimeLabel.Text = "00:00:00"
     end
-
 end)
 
--- TIMER FUNCTION
+-- timer
 local function startTimer()
 
-    while true do
+    task.spawn(function()
 
-        local timeLeft = expireTime - os.time()
+        while true do
 
-        if timeLeft <= 0 then
+            local timeLeft = expireTime - os.time()
 
-            TimeLabel.Text = "00:00:00"
-            Status.Text = "TIMER END PLEASE OUT"
+            if timeLeft <= 0 then
 
-            local EndFrame = Instance.new("Frame")
-            EndFrame.Parent = ScreenGui
-            EndFrame.Size = UDim2.new(0,300,0,150)
-            EndFrame.Position = UDim2.new(0.5,-150,0.5,-75)
-            EndFrame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+                TimeLabel.Text = "00:00:00"
+                Status.Text = "TIMER END PLEASE OUT"
 
-            local EndText = Instance.new("TextLabel")
-            EndText.Parent = EndFrame
-            EndText.Size = UDim2.new(1,0,1,0)
-            EndText.BackgroundTransparency = 1
-            EndText.Text = "TIMER END\nPLEASE OUT"
-            EndText.TextScaled = true
-            EndText.TextColor3 = Color3.fromRGB(255,0,0)
+                break
 
-            break
+            end
+
+            TimeLabel.Text = formatTime(timeLeft)
+
+            task.wait(1)
 
         end
 
-        TimeLabel.Text = formatTime(timeLeft)
-
-        task.wait(1)
-
-    end
+    end)
 
 end
 
--- CONFIRM BUTTON
+-- confirm
 Confirm.MouseButton1Click:Connect(function()
 
     if KeyBox.Text == PremiumKey then
