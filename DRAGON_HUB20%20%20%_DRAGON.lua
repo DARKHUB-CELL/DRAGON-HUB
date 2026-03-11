@@ -7,8 +7,13 @@ local KeyBox = Instance.new("TextBox")
 local GetKey = Instance.new("TextButton")
 local Confirm = Instance.new("TextButton")
 local Logo = Instance.new("ImageLabel")
+local TimeLabel = Instance.new("TextLabel")
+
 local Corner = Instance.new("UICorner")
 local Stroke = Instance.new("UIStroke")
+
+local PremiumKey = "DRAGONTEST"
+local PremiumTime = 120
 
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 ScreenGui.ResetOnSpawn = false
@@ -23,7 +28,6 @@ Corner.CornerRadius = UDim.new(0,12)
 
 Stroke.Parent = Frame
 Stroke.Thickness = 3
-Stroke.Color = Color3.fromRGB(255,0,0)
 
 Title.Parent = Frame
 Title.Size = UDim2.new(1,0,0,50)
@@ -56,21 +60,25 @@ KeyBox.TextScaled = true
 KeyBox.BackgroundColor3 = Color3.fromRGB(50,50,50)
 KeyBox.TextColor3 = Color3.fromRGB(255,255,255)
 
+TimeLabel.Parent = Frame
+TimeLabel.Position = UDim2.new(0.35,0,0.45,0)
+TimeLabel.Size = UDim2.new(0.3,0,0,30)
+TimeLabel.Text = "00:00:00"
+TimeLabel.TextScaled = true
+TimeLabel.BackgroundTransparency = 1
+TimeLabel.TextColor3 = Color3.fromRGB(0,255,0)
+
 GetKey.Parent = Frame
-GetKey.Position = UDim2.new(0.1,0,0.5,0)
+GetKey.Position = UDim2.new(0.1,0,0.55,0)
 GetKey.Size = UDim2.new(0.35,0,0,40)
 GetKey.Text = "GET KEY"
 GetKey.TextScaled = true
-GetKey.BackgroundColor3 = Color3.fromRGB(70,70,70)
-GetKey.TextColor3 = Color3.fromRGB(255,255,255)
 
 Confirm.Parent = Frame
-Confirm.Position = UDim2.new(0.55,0,0.5,0)
+Confirm.Position = UDim2.new(0.55,0,0.55,0)
 Confirm.Size = UDim2.new(0.35,0,0,40)
 Confirm.Text = "CONFIRM"
 Confirm.TextScaled = true
-Confirm.BackgroundColor3 = Color3.fromRGB(70,70,70)
-Confirm.TextColor3 = Color3.fromRGB(255,255,255)
 
 Logo.Parent = Frame
 Logo.Size = UDim2.new(0,120,0,120)
@@ -79,15 +87,54 @@ Logo.BackgroundTransparency = 1
 Logo.Image = "rbxassetid://135408263740320"
 Logo.ScaleType = Enum.ScaleType.Fit
 
--- RGB BORDER LOOP
-spawn(function()
+-- RGB BORDER
+task.spawn(function()
     local hue = 0
     while true do
-        hue = hue + 0.01
-        if hue > 1 then
-            hue = 0
-        end
+        hue += 0.01
+        if hue > 1 then hue = 0 end
         Stroke.Color = Color3.fromHSV(hue,1,1)
         task.wait(0.03)
     end
+end)
+
+-- FORMAT TIME
+local function formatTime(sec)
+    local h = math.floor(sec / 3600)
+    local m = math.floor((sec % 3600) / 60)
+    local s = sec % 60
+    return string.format("%02d:%02d:%02d",h,m,s)
+end
+
+-- SHOW TIME WHEN KEY CORRECT
+KeyBox:GetPropertyChangedSignal("Text"):Connect(function()
+
+    if KeyBox.Text == PremiumKey then
+        TimeLabel.Text = formatTime(PremiumTime)
+    else
+        TimeLabel.Text = "00:00:00"
+    end
+
+end)
+
+-- CONFIRM
+Confirm.MouseButton1Click:Connect(function()
+
+    if KeyBox.Text == PremiumKey then
+        
+        Status.Text = "Premium Activated"
+
+        task.wait(5)
+
+        ScreenGui:Destroy()
+
+        print("Dragon Hub Loaded")
+
+    else
+        
+        Status.Text = "Wrong Key"
+        TimeLabel.Text = "00:00:00"
+
+    end
+
 end)
