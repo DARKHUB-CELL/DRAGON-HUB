@@ -115,6 +115,11 @@ ResetCaptcha.TextScaled = true
 ResetCaptcha.BackgroundColor3 = Color3.fromRGB(70,70,70)
 ResetCaptcha.TextColor3 = Color3.fromRGB(255,255,255)
 
+-- ẨN CAPTCHA BAN ĐẦU
+CaptchaFrame.Visible = false
+CaptchaBox.Visible = false
+ResetCaptcha.Visible = false
+
 -- RGB BORDER
 task.spawn(function()
 
@@ -179,7 +184,6 @@ createCaptcha()
 ResetCaptcha.MouseButton1Click:Connect(function()
 
     createCaptcha()
-
     CaptchaBox.Text = ""
 
 end)
@@ -188,12 +192,11 @@ end)
 GetKey.MouseButton1Click:Connect(function()
 
     setclipboard("DRAGONFREE")
-
     Status.Text = "Key Copied"
 
 end)
 
--- CONFIRM
+-- CONFIRM KEY
 Confirm.MouseButton1Click:Connect(function()
 
     local key = KeyBox.Text
@@ -203,21 +206,36 @@ Confirm.MouseButton1Click:Connect(function()
         Status.Text = "ADMIN KEY ACCEPTED"
 
         task.wait(0.5)
-
         ScreenGui:Destroy()
-
         print("Dragon Hub Loaded")
 
     elseif key == NormalKey or key == PremiumKey then
 
+        Status.Text = "Key Correct - Solve Captcha"
+
+        CaptchaFrame.Visible = true
+        CaptchaBox.Visible = true
+        ResetCaptcha.Visible = true
+
+    else
+
+        Status.Text = "Wrong Key"
+
+    end
+
+end)
+
+-- CAPTCHA CHECK
+CaptchaBox.FocusLost:Connect(function()
+
+    if CaptchaFrame.Visible then
+
         if CaptchaBox.Text == captchaText then
 
-            Status.Text = "KEY ACCEPTED"
+            Status.Text = "CAPTCHA CORRECT"
 
             task.wait(0.5)
-
             ScreenGui:Destroy()
-
             print("Dragon Hub Loaded")
 
         else
@@ -225,14 +243,9 @@ Confirm.MouseButton1Click:Connect(function()
             Status.Text = "Wrong Captcha"
 
             createCaptcha()
-
             CaptchaBox.Text = ""
 
         end
-
-    else
-
-        Status.Text = "Wrong Key"
 
     end
 
