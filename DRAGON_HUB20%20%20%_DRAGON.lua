@@ -4,4 +4,4 @@ getgenv().ScriptSubTitle = "VERISON V1.20 BETA"
 getgenv().ScriptImage = "https://i.ibb.co/DPhG5xQY/logo-500.png"
 getgenv().ScriptAuthorName = "Võ anh vũ"
 getgenv().ScriptAuthorSubTitle = "Author Info"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/DARKHUB-CELL/DRAGON-HUB/refs/heads/main/DRAGON_HUB20%2520%2520%25_DRAGON.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hoannhatz/Script/refs/heads/main/EZScript.lua"))()
