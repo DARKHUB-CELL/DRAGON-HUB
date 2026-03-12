@@ -1,101 +1,99 @@
-repeat task.wait() until game:IsLoaded()
+-- KEY SYSTEM
 
-local player = game.Players.LocalPlayer
+local correctKey = "FREE_WHATTHEFUCK001927"
+local youtube = "https://www.youtube.com/@DRAGON-HUB-f2i"
 
--- GUI
-local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
-local Title = Instance.new("TextLabel")
-local KeyBox = Instance.new("TextBox")
-local GetKey = Instance.new("TextButton")
-local Confirm = Instance.new("TextButton")
-local Info = Instance.new("TextLabel")
-local Stroke = Instance.new("UIStroke")
+local gui = Instance.new("ScreenGui", game.CoreGui)
 
-ScreenGui.Parent = player.PlayerGui
-ScreenGui.ResetOnSpawn = false
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0,360,0,230)
+frame.Position = UDim2.new(0.5,-180,0.5,-115)
+frame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+frame.BackgroundTransparency = 0.2
+frame.ClipsDescendants = true
 
-Frame.Parent = ScreenGui
-Frame.Size = UDim2.new(0,350,0,250)
-Frame.Position = UDim2.new(0.5,-175,0.5,-125)
-Frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+-- Aurora background
+local bg = Instance.new("ImageLabel", frame)
+bg.Size = UDim2.new(1.5,0,1.5,0)
+bg.Position = UDim2.new(-0.25,0,-0.25,0)
+bg.Image = "rbxassetid://12964043815"
+bg.BackgroundTransparency = 1
+bg.ImageTransparency = 0.35
 
-Stroke.Parent = Frame
-Stroke.Thickness = 8
+-- Title
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1,0,0,40)
+title.Text = "KEY SYSTEM"
+title.TextScaled = true
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.new(1,1,1)
 
-Title.Parent = Frame
-Title.Size = UDim2.new(1,0,0,40)
-Title.Text = "DRAGON HUB KEY SYSTEM"
-Title.BackgroundTransparency = 1
-Title.TextScaled = true
-Title.TextColor3 = Color3.new(1,1,1)
+-- Status
+local status = Instance.new("TextLabel", frame)
+status.Position = UDim2.new(0,0,0,60)
+status.Size = UDim2.new(1,0,0,25)
+status.Text = "Status: Wait the key..."
+status.BackgroundTransparency = 1
+status.TextColor3 = Color3.new(1,1,1)
 
-KeyBox.Parent = Frame
-KeyBox.Size = UDim2.new(0.8,0,0,40)
-KeyBox.Position = UDim2.new(0.1,0,0.35,0)
-KeyBox.PlaceholderText = "Enter Key..."
+-- Textbox
+local box = Instance.new("TextBox", frame)
+box.Position = UDim2.new(0.1,0,0.45,0)
+box.Size = UDim2.new(0.8,0,0,35)
+box.PlaceholderText = "E. Vui lòng nhập key"
 
-GetKey.Parent = Frame
-GetKey.Size = UDim2.new(0.35,0,0,40)
-GetKey.Position = UDim2.new(0.1,0,0.6,0)
-GetKey.Text = "GET KEY"
+-- Buttons
+local getlink = Instance.new("TextButton", frame)
+getlink.Position = UDim2.new(0.15,0,0.72,0)
+getlink.Size = UDim2.new(0.3,0,0,35)
+getlink.Text = "Get Link"
 
-Confirm.Parent = Frame
-Confirm.Size = UDim2.new(0.35,0,0,40)
-Confirm.Position = UDim2.new(0.55,0,0.6,0)
-Confirm.Text = "CONFIRM"
+local confirm = Instance.new("TextButton", frame)
+confirm.Position = UDim2.new(0.55,0,0.72,0)
+confirm.Size = UDim2.new(0.3,0,0,35)
+confirm.Text = "Confirm"
 
-Info.Parent = Frame
-Info.Size = UDim2.new(1,0,0,30)
-Info.Position = UDim2.new(0,0,0.8,0)
-Info.BackgroundTransparency = 1
-Info.Text = "Waiting Key..."
-
-local Key = "FREE_12A089AD123"
-
--- RGB viền
-task.spawn(function()
-    local hue = 0
-    while true do
-        hue += 0.01
-        if hue > 1 then hue = 0 end
-        Stroke.Color = Color3.fromHSV(hue,1,1)
-        task.wait(0.03)
-    end
+-- Copy youtube
+getlink.MouseButton1Click:Connect(function()
+setclipboard(youtube)
+status.Text = "Status: Link copied!"
 end)
 
--- GET KEY
-GetKey.MouseButton1Click:Connect(function()
+-- Confirm key
+confirm.MouseButton1Click:Connect(function()
 
-    setclipboard("https://www.youtube.com/@DRAGON-HUB-f2i")
-    Info.Text = "YouTube Link Copied"
+if box.Text == correctKey then
+
+status.Text = "Status: Correct Key!"
+wait(1)
+frame:Destroy()
+
+-- LOAD YOUR SCRIPT
+
+getgenv().ScriptTitle = "DRAGON HUB"
+getgenv().ScriptSubTitle = "VERSION 1.20 BeTa"
+getgenv().ScriptImage = "https://i.ibb.co/4RP9Mspj/hien-tuong-cuc-quang-1-1741247162.webp"
+getgenv().ScriptAuthorName = "GUGUGAGA"
+getgenv().ScriptAuthorSubTitle = "Author Info"
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hoannhatz/Script/refs/heads/main/EZScript.lua"))()
+
+else
+status.Text = "Status: Wrong Key!"
+end
 
 end)
 
--- CONFIRM
-Confirm.MouseButton1Click:Connect(function()
-
-    if KeyBox.Text == Key then
-
-        Info.Text = "Key Correct"
-
-        task.wait(1)
-
-        ScreenGui:Destroy()
-
-        -- LOAD DRAGON HUB MENU
-        getgenv().ScriptTitle = "DRAGON HUB"
-        getgenv().ScriptSubTitle = "VERISON V1.20 BETA"
-        getgenv().ScriptImage = "https://i.ibb.co/DPhG5xQY/logo-500.png"
-        getgenv().ScriptAuthorName = "Võ anh vũ"
-        getgenv().ScriptAuthorSubTitle = "Author Info"
-
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/hoannhatz/Script/refs/heads/main/EZScript.lua"))()
-
-    else
-
-        Info.Text = "Wrong Key"
-
-    end
-
+-- Aurora movement
+spawn(function()
+while true do
+for i=-0.25,-0.15,0.001 do
+bg.Position = UDim2.new(i,0,-0.25,0)
+task.wait()
+end
+for i=-0.15,-0.25,-0.001 do
+bg.Position = UDim2.new(i,0,-0.25,0)
+task.wait()
+end
+end
 end)
